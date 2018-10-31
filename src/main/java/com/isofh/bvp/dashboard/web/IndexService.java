@@ -19,6 +19,8 @@ public class IndexService {
     @Autowired
     IndexRepository indexRepository;
     public static TreeMap<Long,String> departments=new TreeMap<>();
+    public static TreeMap<Long,String> departmentsIP=new TreeMap<>();
+
 
     @PostConstruct
     public void init(){
@@ -36,6 +38,24 @@ public class IndexService {
         departments.put(Long.valueOf(1000242),"Khoa Huyết học");
         departments.put(Long.valueOf(1000272),"Khoa Phẫu thuật lồng ngực");
         departments.put(Long.valueOf(999999999),"Khác");
+
+        //danh sach khoa noi tru
+        departmentsIP.put(Long.valueOf(1000235),"Khoa Nội tổng hợp");
+        departmentsIP.put(Long.valueOf(1000271),"Khoa Thăm dò và Phục hồi chức năng");
+        departmentsIP.put(Long.valueOf(1000553),"Trung tâm điều trị TYC Công nghệ cao");
+        departmentsIP.put(Long.valueOf(1000264),"Khoa Bệnh phổi nghề nghiệp");
+        departmentsIP.put(Long.valueOf(1000234),"Khoa Hồi sức tích cực");
+        departmentsIP.put(Long.valueOf(1000272),"Khoa Phẫu thuật lồng ngực");
+        departmentsIP.put(Long.valueOf(1000261),"Khoa Ung bướu");
+        departmentsIP.put(Long.valueOf(1000241),"Khoa Vi sinh và Labo lao chuẩn Quốc gia");
+        departmentsIP.put(Long.valueOf(1000238),"Khoa Ngoại tổng hợp");
+        departmentsIP.put(Long.valueOf(1000333),"Khoa Cấp cứu");
+        departmentsIP.put(Long.valueOf(1000270),"Khoa Gây mê hồi sức");
+        departmentsIP.put(Long.valueOf(1000313),"Đơn vị CMU");
+        departmentsIP.put(Long.valueOf(1000233),"Khoa Lao hô hấp");
+        departmentsIP.put(Long.valueOf(1000239),"Khoa Nhi");
+        departmentsIP.put(Long.valueOf(1000236),"Khoa Hô hấp");
+        departmentsIP.put(Long.valueOf(1000269),"Khoa Bệnh phổi mạn tính");
     }
 
     public Optional<List<Object[]>> test(){
@@ -79,6 +99,13 @@ public class IndexService {
         return Optional.ofNullable(list);
     }
 
+    private Optional<List<DoiTuong>> lephiDVKhoa(int year,int month,int week){
+        Date from=DateUtils.getFromAndToDate(year,month,week,true);
+        Date to=DateUtils.getFromAndToDate(year,month,week,false);
+        List<DoiTuong> list=indexRepository.lephiDVCacKhoa(from,to).orElse(new ArrayList<>());
+        return Optional.ofNullable(list);
+    }
+
     public Optional<BieuDo> TyLeLePhiKhoa(int year,int month,int week){
         List<DoiTuong> items=lephiDVKhoa(year,month,week).orElse(new ArrayList<>());
         BieuDo bieudo=new BieuDo();
@@ -86,12 +113,21 @@ public class IndexService {
         return Optional.ofNullable(bieudo);
     }
 
-    private Optional<List<DoiTuong>> lephiDVKhoa(int year,int month,int week){
-        Date from=DateUtils.getFromAndToDate(year,month,week,true);
+    public Optional<BieuDo> BNNoiTruKhoa(int year,int month,int week){
+        List<DoiTuong> items=BNNoiTruTaiCacKhoa(year,month,week).orElse(new ArrayList<>());
+        BieuDo bieudo=new BieuDo();
+        genBieuDoBNNoitruKhoa(items,bieudo);
+        return Optional.ofNullable(bieudo);
+    }
+
+    private Optional<List<DoiTuong>> BNNoiTruTaiCacKhoa(int year,int month,int week){
         Date to=DateUtils.getFromAndToDate(year,month,week,false);
-        List<DoiTuong> list=indexRepository.lephiDVCacKhoa(from,to).orElse(new ArrayList<>());
+        List<DoiTuong> list=indexRepository.BNNoiTruCacKhoa(to).orElse(new ArrayList<>());
         return Optional.ofNullable(list);
     }
+
+
+
     public Optional<BieuDo2GiaTri> LuotKhamBenh(int year, int month, int week){
         List<DoiTuong> list=LuotKham(year,month,week).orElse(new ArrayList<>());
         BieuDo2GiaTri bieudo=new BieuDo2GiaTri();
@@ -310,6 +346,28 @@ public class IndexService {
             }else{
                 BigDecimal value=listValue.get(Long.valueOf(999999999));
                 listValue.put(Long.valueOf(999999999),value.add(item.getValue()));
+            }
+        });
+        listValue.forEach((k,v)->{
+            values.add(v);
+        });
+        bieudo.setNames(names);
+        bieudo.setValues(values);
+    }
+
+    private void genBieuDoBNNoitruKhoa(List<DoiTuong> list,BieuDo bieudo){
+        List<String> names=new ArrayList<>();
+        List<BigDecimal> values=new ArrayList<>();
+        TreeMap<Long,BigDecimal> listValue=new TreeMap<>();
+        departmentsIP.forEach((k,v)->{
+            listValue.put(k,BigDecimal.valueOf(0));
+            names.add(v);
+        });
+        list.stream().forEach(item->{
+            String name=departmentsIP.get(item.getId());
+            if(StringUtils.isNotBlank(name)){
+                BigDecimal value=listValue.get(item.getId());
+                listValue.put(item.getId(),value.add(item.getValue()));
             }
         });
         listValue.forEach((k,v)->{

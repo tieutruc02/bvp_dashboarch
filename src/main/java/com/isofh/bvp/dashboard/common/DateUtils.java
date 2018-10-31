@@ -23,8 +23,7 @@ public class DateUtils {
             cal.set(Calendar.HOUR_OF_DAY,0);
             return cal.getTime();
         }else{
-            //set la Calendar.SATURDAY thi se lay ra ngay SUNDAY vi set FirstDayOfWeek=2 nen cal thi tinh tu thu 2, con Calendar thi ko thay doi
-            cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             cal.set(Calendar.MILLISECOND,999);
             cal.set(Calendar.SECOND,59);
             cal.set(Calendar.MINUTE,59);

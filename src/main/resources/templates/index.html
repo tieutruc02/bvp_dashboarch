@@ -4,7 +4,6 @@
     <title>Dashboard BVP</title>
     <div th:replace="fragments/header :: header-common"/>
     <script th:src="@{/js/index.js}"></script>
-
 </head>
 <body>
 <section class="vbox">
@@ -69,18 +68,7 @@
                                     <div class="col-md-3" ng-show="showWeek">
                                         <select name="week" class="select2-option" style="width:100%" ng-model="week">
                                             <option value="">Chọn tuần</option>
-                                            <option value="1">Tuần 1</option>
-                                            <option value="2">Tuần 2</option>
-                                            <option value="3">Tuần 3</option>
-                                            <option value="4">Tuần 4</option>
-                                            <option value="5">Tuần 5</option>
-                                            <option value="6">Tuần 6</option>
-                                            <option value="7">Tuần 7</option>
-                                            <option value="8">Tuần 8</option>
-                                            <option value="9">Tuần 9</option>
-                                            <option value="10">Tuần 10</option>
-                                            <option value="11">Tuần 11</option>
-                                            <option value="12">Tuần 12</option>
+                                            <option  ng-repeat="item in listWeek" value="{{item}}">Tuần {{item}}</option>
                                         </select>
                                         <span class="red">{{weekError}}</span>
                                     </div>
@@ -93,23 +81,70 @@
                             </div>
                         </section>
                         <section id="main" class="panel panel-default">
-                            <div class="row">
-                                <div class="col-md-8">
 
+                            <div class="row">
+                                <div class="col-lg-6">
                                     <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ {{nameTitle}}</header>
-                                        <div class="panel-body" style="height:500px;">
-                                            <div id="bieudochong" ng-show="showLephi" style="min-width: 310px; height: 460px; margin: 0 auto"></div>
+                                        <header class="panel-heading font-bold">Biểu đồ lượt khám {{nameTitle}}</header>
+                                        <div class="panel-body" style="height:630px;">
+                                            <div id="luotkham" style="min-width: 310px; height: 560px; margin: 0 auto" ng-show="showLuotKham"></div>
+                                            <div ng-show="!showLuotKham" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
                                         </div>
                                     </section>
 
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-lg-6">
+                                    <section class="panel panel-default">
+                                        <header class="panel-heading font-bold">DS bệnh nhân nội trú ở các khoa {{nameTitle}}</header>
+                                        <div class="bieudoBNNoitruCacKhoa">
+                                            <div class="bieudotron" style="text-align:center">
+                                                <div ng-show="!showNoitruCacKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                                <div class="col-sm-4">
+                                                    <canvas class="canvasDoughnutBNNoitruKhoa" height="220" width="220" style="margin: 150px 10px 10px 0" ng-show="showNoitruCacKhoa"></canvas>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <table class="table table-striped m-b-none" style="text-align:left" ng-show="showNoitruCacKhoa">
+                                                        <tbody>
+                                                        <tr  ng-repeat="item in listDepartmentInpatient track by $index">
+                                                            <td>
+                                                             <span class="fa-stack fa pull-right m-r-sm">
+                                                                 <i class="fa fa-square fa-stack-2x" style="color:{{listColor[$index]}};"></i> <i class="fa fa-stack-1x text-white"></i>
+                                                             </span>
+                                                            </td>
+                                                            <td>{{item}}</td>
+                                                            <td style="text-align: right;">
+                                                                {{bnnoitrukhoa.values[$index] | currency:'':0}}
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </section>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <section class="panel panel-default">
+                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ {{nameTitle}}</header>
+                                        <div class="panel-body" style="height:600px;">
+                                            <div id="bieudochong" ng-show="showLephi" style="min-width: 310px; height: 560px; margin: 0 auto"></div>
+                                            <div ng-show="!showLephi" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                        </div>
+                                    </section>
+
+                                </div>
+                                <div class="col-lg-4">
                                     <section class="panel panel-default">
                                         <header class="panel-heading font-bold">Tỷ lệ doanh thu lệ phí các khoa {{nameTitle}}</header>
-                                        <div class=" " style="height:800px">
+                                        <div class=" " style="height:880px">
                                             <div class="bieudotron" style="text-align:center">
-                                                <canvas class="canvasDoughnutDoanhThuLePhiKhoa" height="220" width="220" style="margin: 15px 10px 10px 0" ng-show="showTyLeKhoa"></canvas>
+                                                <div ng-show="!showTyLeKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                                <canvas class="canvasDoughnutDoanhThuLePhiKhoa" height="300" width="300" style="margin: 15px 10px 10px 0" ng-show="showTyLeKhoa"></canvas>
                                                 <table class="table table-striped m-b-none" style="text-align:left" ng-show="showTyLeKhoa">
                                                     <tbody>
                                                     <tr  ng-repeat="item in listDeparmentName track by $index">
@@ -123,39 +158,6 @@
                                                             {{doanhthulephikhoa.values[$index] | currency:'':0}}
                                                         </td>
                                                     </tr>
-                                                    <!--<tr>-->
-                                                        <!--<td>-->
-                                                            <!--<span class="fa-stack fa pull-right m-r-sm">-->
-                                                                 <!--<i class="fa fa-square fa-stack-2x" style="color:#9B59B6;"></i> <i class="fa fa-stack-1x text-white"></i>-->
-                                                             <!--</span>-->
-                                                        <!--</td>-->
-                                                        <!--<td>Gia hạn</td>-->
-                                                        <!--<td style="text-align: right;">-->
-                                                            <!--6356363-->
-                                                        <!--</td>-->
-                                                    <!--</tr>-->
-                                                    <!--<tr>-->
-                                                        <!--<td>-->
-                                                            <!--<span class="fa-stack fa pull-right m-r-sm">-->
-                                                                 <!--<i class="fa fa-square fa-stack-2x" style="color:#26B99A;"></i> <i class="fa fa-stack-1x text-white"></i>-->
-                                                             <!--</span>-->
-                                                        <!--</td>-->
-                                                        <!--<td>Xác thực</td>-->
-                                                        <!--<td style="text-align: right;">-->
-                                                            <!--245232-->
-                                                        <!--</td>-->
-                                                    <!--</tr>-->
-                                                    <!--<tr>-->
-                                                        <!--<td>-->
-                                                            <!--<span class="fa-stack fa pull-right m-r-sm">-->
-                                                                 <!--<i class="fa fa-square fa-stack-2x" style="color:#BDC3C7;"></i> <i class="fa fa-stack-1x text-white"></i>-->
-                                                             <!--</span>-->
-                                                        <!--</td>-->
-                                                        <!--<td>Gia hạn xác thực</td>-->
-                                                        <!--<td style="text-align: right;">-->
-                                                            <!--86666-->
-                                                        <!--</td>-->
-                                                    <!--</tr>-->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -163,17 +165,6 @@
 
                                     </section>
                                 </div>
-                                <div class="col-md-12">
-                                    <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Biểu đồ lượt khám {{nameTitle}}</header>
-                                        <div class="panel-body" style="height:500px;">
-                                            <div id="luotkham" style="min-width: 310px; height: 460px; margin: 0 auto" ng-show="showLuotKham"></div>
-
-                                        </div>
-                                    </section>
-
-                                </div>
-
                             </div>
 
                         </section>
@@ -219,5 +210,17 @@
         $this.toggleClass('active');
     });
 </script>
+<style>
+    @media only screen and (max-width: 768px) {
+        .bieudoBNNoitruCacKhoa{
+            height:1000px;
+        }
+    }
+    @media only screen and (min-width: 768px) {
+        .bieudoBNNoitruCacKhoa{
+            height:630px;
+        }
+    }
+</style>
 </body>
 </html>

@@ -11,6 +11,7 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
         $scope.showYear=false;
         $scope.type="";
         $scope.listYear=[];
+        $scope.listWeek=[];
         $scope.nameTitle="tuần này";
         var date=new Date();
         var week = getWeekNumber(date);
@@ -19,18 +20,24 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
             $scope.listYear.push(fullYear);
             fullYear--;
         }
-        $scope.showLuotKham=true;
-        $scope.showLephi=true;
-        $scope.showTyLeKhoa=true;
+        for(var i=1;i<54;i++){
+            $scope.listWeek.push(i);
+        }
+        $scope.showLuotKham=false;
+        $scope.showLephi=false;
+
+        $scope.showNoitruCacKhoa=false;
+        $scope.listColor=["#3498DB","#9B59B6","#26B99A","#dbcb34","#db3445","#db7734","#db3498","#34db77","#5e0d70","#0f3582","#0f6e82","#0f8235","#82520f","#BDC3C7","#0b3501","#030f00"];
 
 
-/*BIEU DO TRON TY LE DOANH THU LOAI GIAO DICH*/
+/*BIEU DO TRON TY LE DOANH THU LE PHI CAC KHOA*/
         $scope.doanhthulephikhoa="";
         $http.get(preUrl+"/lephi-khoa",{params:{year:date.getFullYear(),week:week}})
             .then(function (response) {
                 if(response!=null && response!='undefined' && response.status==200){
                     $scope.doanhthulephikhoa=response.data;
                     $scope.loadBieuDoTronDoanhThuLePhiKhoa();
+                    $scope.showTyLeKhoa=true;
                 }
             });
 
@@ -83,6 +90,7 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
                                 "#0f8235",
                                 "#82520f",
                                 "#BDC3C7"
+
                             ]
                         }]
                     },
@@ -105,12 +113,99 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
         $scope.loadBieuDoTronDoanhThuLePhiKhoa=function () {
             bieudoDoanhthuLePhiKhoa();
         };
-        $scope.listColor=["#3498DB","#9B59B6","#26B99A","#dbcb34","#db3445","#db7734","#db3498","#34db77","#5e0d70","#0f3582","#0f6e82","#0f8235","#82520f","#BDC3C7"];
         $scope.listDeparmentName="";
         $http.get(preUrl+"/list-department-name")
             .then(function (response) {
                 if(response!=null && response!='undefined' && response.status==200){
                     $scope.listDeparmentName=response.data;
+                }
+            });
+        /*BIEU DO TRON BENH NHAN NOI TRU TAI CAC KHOA*/
+        $scope.bnnoitrukhoa="";
+        $http.get(preUrl+"/bnnoitru-khoa",{params:{year:date.getFullYear(),week:week}})
+            .then(function (response) {
+                if(response!=null && response!='undefined' && response.status==200){
+                    $scope.bnnoitrukhoa=response.data;
+                    $scope.loadBieuDoTronBNNoitruKhoa();
+                    $scope.showNoitruCacKhoa=true;
+                }
+            });
+
+        function bieudoBNNoitruKhoa(){
+            if( typeof (Chart) === 'undefined'){ return; }
+            if ($('.canvasDoughnutBNNoitruKhoa').length){
+
+                var chart_doughnut_settings2 = {
+                    type: 'doughnut',
+                    tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+                    data: {
+                        labels: $scope.bnnoitrukhoa.names,
+                        datasets: [{
+                            data: $scope.bnnoitrukhoa.values,
+                            // data: [53437770, 6000000, 3400000, 14323333],
+                            backgroundColor: [
+                                "#3498DB",
+                                "#9B59B6",
+                                "#26B99A",
+                                "#dbcb34",
+                                "#db3445",
+                                "#db7734",
+                                "#db3498",
+                                "#34db77",
+                                "#5e0d70",
+                                "#0f3582",
+                                "#0f6e82",
+                                "#0f8235",
+                                "#82520f",
+                                "#BDC3C7",
+                                "#0b3501",
+                                "#030f00"
+                            ],
+                            hoverBackgroundColor: [
+                                "#3498DB",
+                                "#9B59B6",
+                                "#26B99A",
+                                "#dbcb34",
+                                "#db3445",
+                                "#db7734",
+                                "#db3498",
+                                "#34db77",
+                                "#5e0d70",
+                                "#0f3582",
+                                "#0f6e82",
+                                "#0f8235",
+                                "#82520f",
+                                "#BDC3C7",
+                                "#0b3501",
+                                "#030f00"
+                            ]
+                        }]
+                    },
+                    options: {
+                        legend: false,
+                        responsive: false,
+                        hover:false,//huy bo hover
+                        tooltips:false//huy bo tooltips boi khi dung angularjs load lai thi bi ghi de hinh anh luc hover
+                    }
+                };
+
+                $('.canvasDoughnutBNNoitruKhoa').each(function(){
+                    var chart_element2 = $(this);
+                    var chart_doughnut = new Chart( chart_element2, chart_doughnut_settings2);
+                });
+
+            }
+
+        }
+        $scope.loadBieuDoTronBNNoitruKhoa=function () {
+            bieudoBNNoitruKhoa();
+        };
+
+        $scope.listDepartmentInpatient="";
+        $http.get(preUrl+"/list-department-ip")
+            .then(function (response) {
+                if(response!=null && response!='undefined' && response.status==200){
+                    $scope.listDepartmentInpatient=response.data;
                 }
             });
 
@@ -121,6 +216,7 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
                 if(response!=null && response!='undefined' && response.status==200){
                     $scope.doanhthulephi=response.data;
                     $scope.bieudodoanhthulephi();
+                    $scope.showLephi=true;
                 }
             });
         $scope.bieudodoanhthulephi=function(){
@@ -199,6 +295,7 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
                 if(response!=null && response!='undefined' && response.status==200){
                     $scope.checkup=response.data;
                     $scope.bieudoluotkham();
+                    $scope.showLuotKham=true;
                 }
             });
         $scope.bieudoluotkham=function(){
@@ -329,6 +426,7 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
                 $scope.showLuotKham=false;
                 $scope.showLephi=false;
                 $scope.showTyLeKhoa=false;
+                $scope.showNoitruCacKhoa=false;
                 $scope.reloadAllChart();
             }
         };
@@ -356,6 +454,15 @@ app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
                         $scope.doanhthulephikhoa=response.data;
                         $scope.loadBieuDoTronDoanhThuLePhiKhoa();
                         $scope.showTyLeKhoa=true;
+                    }
+                });
+
+            $http.get(preUrl+"/bnnoitru-khoa",{params:{year:$scope.year,month:$scope.month,week:$scope.week}})
+                .then(function (response) {
+                    if(response!=null && response!='undefined' && response.status==200){
+                        $scope.bnnoitrukhoa=response.data;
+                        $scope.loadBieuDoTronBNNoitruKhoa();
+                        $scope.showNoitruCacKhoa=true;
                     }
                 });
 

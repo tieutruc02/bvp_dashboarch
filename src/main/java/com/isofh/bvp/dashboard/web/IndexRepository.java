@@ -121,6 +121,33 @@ public class IndexRepository {
     }
 
 
+    public Optional<List<DoiTuong>> BNNoiTruCacKhoa(Date toDate){
+        StringBuffer sql=new StringBuffer();
+        sql.append("select hd.NAME, hd.HIS_DEPARTMENT_ID, ")
+                .append(" (Select COUNT(HIS_PATIENTHISTORY_ID) from HIS_PATIENTHISTORY  ")
+                .append(" where HIS_DEPARTMENT_ID = hd.HIS_DEPARTMENT_ID and TIMEGOIN < ? and (TIMEGOOUT is null or TIMEGOOUT > ? ) and ISINPATIENT = 'Y') as Soluong ")
+                .append(" from HIS_DEPARTMENT hd ")
+                .append(" left join HIS_PATIENTHISTORY ph on hd.HIS_DEPARTMENT_ID = ph.HIS_DEPARTMENT_ID where ph.ISINPATIENT='Y' ")
+                .append(" group by hd.HIS_DEPARTMENT_ID, hd.NAME ");
+        Query query=entityManager.createNativeQuery(sql.toString());
+        query.setParameter(1,toDate);
+        query.setParameter(2,toDate);
+        List<Object[]> list=query.getResultList();
+        List<DoiTuong> items=new ArrayList<>();
+        if(list!=null && list.size()>0){
+            list.stream().forEach(item->{
+                Long id=Long.valueOf(0);
+                String name="";
+                if(StringUtils.isNotBlank((String)item[0])){
+                    id=Long.valueOf(((BigDecimal)item[1]).longValue());
+                    name=(String)item[0];
+                }
+                items.add(new DoiTuong(id,name,null,(BigDecimal)item[2]));
+            });
+        }
+        return Optional.ofNullable(items);
+    }
+
 
 
 }

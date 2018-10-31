@@ -28,10 +28,9 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<List<Object[]>> test(){
-        List<Object[]> list=service.test().orElse(null);
-        return  new ResponseEntity<List<Object[]>>(list, HttpStatus.OK);
+    @GetMapping("/login")
+    public String login(){
+        return "login";
     }
 
     @GetMapping("/checkup")
@@ -84,35 +83,32 @@ public class IndexController {
         return new ResponseEntity<List<String>>(new ArrayList<>(),HttpStatus.OK);
     }
 
+    @GetMapping("/list-department-ip")
+    public ResponseEntity<List<String>> listDepartmentInpatient(){
+        try{
+            List<String> names=new ArrayList<>();
+            IndexService.departmentsIP.forEach((k,v)->{
+                names.add(v);
+            });
+            return new ResponseEntity<List<String>>(names,HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<List<String>>(new ArrayList<>(),HttpStatus.OK);
+    }
 
-//    public static void main(String[] args) {
-//        LocalDate date = LocalDate.of(2018, 10,13);
-//        Date to=DateUtils.getFromAndToDate(2018,10,0,false);
-//        System.out.println(DateUtils.genListDayOfMonth(2018,10));
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(Calendar.YEAR,2018);
-//        cal.setFirstDayOfWeek(2);
-//        cal.set(Calendar.WEEK_OF_YEAR, 23);
-//        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-//        System.out.println(sdf.format(cal.getTime()));
-//        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-//        System.out.println(sdf.format(cal.getTime()));
-//        System.out.println(cal.getTime());
-//        System.out.println("----------------------------------------");
-//        LocalDate fromDate =LocalDate.now().withDayOfMonth(1);
-//        LocalDate toDate = LocalDate.now().minusDays(1);
-//        LocalDate toDate1 = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
-//        System.out.println(fromDate+"----"+toDate+"----"+toDate1);
-//        System.out.println("----------------------------------------");
-//
-//        LocalDate ld = LocalDate.of(2018, 10,29);
-//        System.out.println(ld.with(DayOfWeek.MONDAY));
-//
-//
-//        LocalDate date = LocalDate.of(2018, 10,1);
-//        LocalDateTime date5 = date.atTime(23,59,59);
-//        System.out.println("date5: " + date5);
-//    }
+    @GetMapping("/bnnoitru-khoa")
+    public ResponseEntity<BieuDo> CountPatientInDepartmentIP(int year, @RequestParam(value = "month", required = false, defaultValue = "0")int month
+            , @RequestParam(value = "week", required = false, defaultValue = "0") int week){
+        try{
+            BieuDo item=service.BNNoiTruKhoa(year,month,week).orElse(new BieuDo());
+            return new ResponseEntity<BieuDo>(item,HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<BieuDo>(new BieuDo(),HttpStatus.OK);
+    }
+
+
 
 }
