@@ -1,13 +1,32 @@
 /**
  * Created by Admin on 12/22/2017.
  */
-app.controller('dashCtrl',['$scope','$http'
-    ,function ($scope,$http) {
+app.controller('dashCtrl',['$scope','$http','$filter','$window','$timeout','$q'
+    ,function ($scope,$http,$filter,$window,$timeout,$q) {
+        $scope.year="";
+        $scope.month="";
+        $scope.week="";
+        $scope.showMonth=false;
+        $scope.showWeek=false;
+        $scope.showYear=false;
+        $scope.type="";
+        $scope.listYear=[];
+        $scope.listWeek=[];
+        $scope.nameTitle="";
+        var date=new Date();
+        var week = getWeekNumber(date);
+        var month=date.getMonth()+1;
+        var fullYear=date.getFullYear();
+        for(var i=0;i<5;i++){
+            $scope.listYear.push(fullYear);
+            fullYear--;
+        }
+        for(var i=1;i<54;i++){
+            $scope.listWeek.push(i);
+        }
         $scope.showLuotKham=false;
-        $scope.showLuotKhamKhoa=false;
         $scope.showLephi=false;
-        $scope.show_lephinhomdv=false;
-        $scope.showTyLeKhoa=false;
+
         $scope.showNoitruCacKhoa=false;
         $scope.listColor=["#3498DB","#9B59B6","#26B99A","#dbcb34","#db3445","#db7734","#db3498","#34db77","#5e0d70","#0f3582","#0f6e82","#0f8235","#82520f","#BDC3C7","#0b3501","#030f00"];
 
@@ -32,8 +51,15 @@ app.controller('dashCtrl',['$scope','$http'
                     tooltipFillColor: "rgba(51, 51, 51, 0.55)",
                     data: {
                         labels: $scope.doanhthulephikhoa.names,
+                        //     [
+                        //     "Đăng ký",
+                        //     "Gia Hạn",
+                        //     "Xác thực",
+                        //     "Gia hạn xác thực"
+                        // ],
                         datasets: [{
                             data: $scope.doanhthulephikhoa.values,
+                            // data: [53437770, 6000000, 3400000, 14323333],
                             backgroundColor: [
                                 "#3498DB",
                                 "#9B59B6",
@@ -76,12 +102,14 @@ app.controller('dashCtrl',['$scope','$http'
                         tooltips:false//huy bo tooltips boi khi dung angularjs load lai thi bi ghi de hinh anh luc hover
                     }
                 };
+
                 $('.canvasDoughnutDoanhThuLePhiKhoa').each(function(){
                     var chart_element1 = $(this);
                     var chart_doughnut = new Chart( chart_element1, chart_doughnut_settings1);
                 });
 
             }
+
         }
         $scope.loadBieuDoTronDoanhThuLePhiKhoa=function () {
             bieudoDoanhthuLePhiKhoa();
@@ -95,6 +123,7 @@ app.controller('dashCtrl',['$scope','$http'
             });
         /*BIEU DO TRON BENH NHAN NOI TRU TAI CAC KHOA*/
         $scope.bnnoitrukhoa="";
+        // $http.get(preUrl+"/bnnoitru-khoa",{params:{year:date.getFullYear(),week:week}})
         $http.get(preUrl+"/bnnoitru-khoa")
             .then(function (response) {
                 if(response!=null && response!='undefined' && response.status==200){
@@ -148,6 +177,86 @@ app.controller('dashCtrl',['$scope','$http'
             });
         };
 
+
+
+        // function bieudoBNNoitruKhoa(){
+        //     if( typeof (Chart) === 'undefined'){ return; }
+        //     if ($('.canvasDoughnutBNNoitruKhoa').length){
+        //
+        //         var chart_doughnut_settings2 = {
+        //             type: 'doughnut',
+        //             tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+        //             data: {
+        //                 labels: $scope.bnnoitrukhoa.names,
+        //                 datasets: [{
+        //                     data: $scope.bnnoitrukhoa.values,
+        //                     // data: [53437770, 6000000, 3400000, 14323333],
+        //                     backgroundColor: [
+        //                         "#3498DB",
+        //                         "#9B59B6",
+        //                         "#26B99A",
+        //                         "#dbcb34",
+        //                         "#db3445",
+        //                         "#db7734",
+        //                         "#db3498",
+        //                         "#34db77",
+        //                         "#5e0d70",
+        //                         "#0f3582",
+        //                         "#0f6e82",
+        //                         "#0f8235",
+        //                         "#82520f",
+        //                         "#BDC3C7",
+        //                         "#0b3501",
+        //                         "#030f00"
+        //                     ],
+        //                     hoverBackgroundColor: [
+        //                         "#3498DB",
+        //                         "#9B59B6",
+        //                         "#26B99A",
+        //                         "#dbcb34",
+        //                         "#db3445",
+        //                         "#db7734",
+        //                         "#db3498",
+        //                         "#34db77",
+        //                         "#5e0d70",
+        //                         "#0f3582",
+        //                         "#0f6e82",
+        //                         "#0f8235",
+        //                         "#82520f",
+        //                         "#BDC3C7",
+        //                         "#0b3501",
+        //                         "#030f00"
+        //                     ]
+        //                 }]
+        //             },
+        //             options: {
+        //                 legend: false,
+        //                 responsive: false,
+        //                 hover:false,//huy bo hover
+        //                 tooltips:false//huy bo tooltips boi khi dung angularjs load lai thi bi ghi de hinh anh luc hover
+        //             }
+        //         };
+        //
+        //         $('.canvasDoughnutBNNoitruKhoa').each(function(){
+        //             var chart_element2 = $(this);
+        //             var chart_doughnut = new Chart( chart_element2, chart_doughnut_settings2);
+        //         });
+        //
+        //     }
+        //
+        // }
+        // $scope.loadBieuDoTronBNNoitruKhoa=function () {
+        //     bieudoBNNoitruKhoa();
+        // };
+        //
+        // $scope.listDepartmentInpatient="";
+        // $http.get(preUrl+"/list-department-ip")
+        //     .then(function (response) {
+        //         if(response!=null && response!='undefined' && response.status==200){
+        //             $scope.listDepartmentInpatient=response.data;
+        //         }
+        //     });
+
         /*BIEU DO DOANH THU LE PHI DICH VU*/
         $scope.doanhthulephi="";
         $http.get(preUrl+"/lephi-dv")
@@ -182,6 +291,15 @@ app.controller('dashCtrl',['$scope','$http'
                 },
 
                 tooltip: {
+                    // formatter: function () {
+                    //     var result= '<b>' + this.x + '</b><br/>' +
+                    //         this.series.name + ': ' + this.y + '<br/>' ;
+                    //     console.log(this.point.stackTotal);
+                    //     if(this.point.stackTotal!=null && this.point.stackTotal!= 'undefined'){
+                    //         result=result+'Tổng: ' + this.point.stackTotal;
+                    //     }
+                    //     return result;
+                    // }
                     formatter: function () {
                         var result= '<b>' + this.x + '</b><br/>' +
                             this.series.name + ': ' + Highcharts.numberFormat(this.y, 1, '.', ',') + '<br/>' ;
@@ -220,6 +338,7 @@ app.controller('dashCtrl',['$scope','$http'
 
         /*BIEU DO LUOT KHAM*/
         $scope.checkup="";
+        // $http.get(preUrl+"/checkup",{params:{year:date.getFullYear(),week:week}})
         $http.get(preUrl+"/checkup")
             .then(function (response) {
                 if(response!=null && response!='undefined' && response.status==200){
@@ -241,10 +360,10 @@ app.controller('dashCtrl',['$scope','$http'
                 },
                 xAxis: {
                     categories: $scope.checkup.names,
+                    // categories: ['haha','mama','kaka'],
                     crosshair: true
                 },
                 yAxis: {
-                    allowDecimals: false,
                     min: 0,
                     title: {
                         text: 'Số lượng'
@@ -265,13 +384,12 @@ app.controller('dashCtrl',['$scope','$http'
                     }
                 },
                 series: [{
-                    type: 'spline',
+
                     name: 'BHYT',
                     data: $scope.checkup.values1,
                     color:'#f15c80'
 
                 }, {
-                    type: 'spline',
                     name: 'Dịch vụ',
                     data: $scope.checkup.values2
 
@@ -279,176 +397,126 @@ app.controller('dashCtrl',['$scope','$http'
             });
         };
 
-        /*BIEU DO LUOT KHAM THEO KHOA*/
-        $scope.checkupDepartment="";
-        $http.get(preUrl+"/checkup-department")
-            .then(function (response) {
-                if(response!=null && response!='undefined' && response.status==200){
-                    $scope.checkupDepartment=response.data;
-                    $scope.bieudoluotkhamKhoa();
-                    $scope.showLuotKhamKhoa=true;
-                }
-            });
-        $scope.bieudoluotkhamKhoa=function(){
-            Highcharts.chart('luotkhamcackhoa', {
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'Lượt khám bệnh các khoa'
-                },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
-                xAxis: {
-                    categories: $scope.checkupDepartment.names,
-                    crosshair: true
-                },
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'Số lượng'
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.f} lượt</b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: true,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    // type: 'spline',
-                    name: 'BHYT',
-                    data: $scope.checkupDepartment.values1,
-                    color:'#f15c80'
 
-                }, {
-                    // type: 'spline',
-                    name: 'Dịch vụ',
-                    data: $scope.checkupDepartment.values2
+        /*CHO MUC CHON CHI TIEU*/
 
-                }]
-            });
+        $scope.changeType=function () {
+            switch($scope.type){
+                case "0":
+                    $scope.showWeek=true;
+                    $scope.showYear=true;
+                    $scope.showMonth=false;
+                    break;
+                case "1":
+                    $scope.showWeek=false;
+                    $scope.showYear=true;
+                    $scope.showMonth=true;
+                    break;
+                case "2":
+                    $scope.showWeek=false;
+                    $scope.showYear=true;
+                    $scope.showMonth=false;
+                    break;
+                default:
+                    break;
+            }
         };
 
-
-        /*BIEU DO LE PHI DICH VU THEO LOAI DV*/
-        $scope.lephidvnhom="";
-        $http.get(preUrl+"/lephidvnhom")
-            .then(function (response) {
-                if(response!=null && response!='undefined' && response.status==200){
-                    $scope.lephidvnhom=response.data;
-                    $scope.bieudolephidvnhom();
-                    $scope.show_lephinhomdv=true;
-                }
-            });
-        $scope.bieudolephidvnhom=function(){
-            Highcharts.chart('lephinhomdv', {
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'Lệ phí DV theo nhóm DV'
-                },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
-                xAxis: {
-                    categories: $scope.lephidvnhom.names,
-                    crosshair: false
-                },
-                yAxis: {
-                    allowDecimals: false,
-                    min: 0,
-                    title: {
-                        text: 'Số lượng'
-                    }
-                },
-                // formatter: function () {
-                //     var result= '<b>' + this.x + '</b><br/>' +
-                //         this.series.name + ': ' + Highcharts.numberFormat(this.y, 1, '.', ',') + '<br/>' ;
-                //     if(this.point.stackTotal!=null && this.point.stackTotal!= 'undefined'){
-                //         result=result+'Tổng: ' + Highcharts.numberFormat(this.point.stackTotal, 1, '.', ',');
-                //     }
-                //     return result;
-                // }
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:,.1f} </b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: false,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    type: 'spline',
-                    name: 'Xét nghiệm',
-                    data: $scope.lephidvnhom.group_1000057
-                    // color:'#f15c80'
-
-                }, {
-                    type: 'spline',
-                    name: 'Chẩn đoán hình ảnh',
-                    data: $scope.lephidvnhom.group_1000058
-
-                }, {
-                    type: 'spline',
-                    name: 'Phẫu thuật thủ thuật',
-                    data: $scope.lephidvnhom.group_1000059
-
-                }, {
-                    type: 'spline',
-                    name: 'Khám bệnh',
-                    data: $scope.lephidvnhom.group_1000060
-
-                }, {
-                    type: 'spline',
-                    name: 'Giường',
-                    data: $scope.lephidvnhom.group_1000061
-
-                }, {
-                    type: 'spline',
-                    name: 'Thuốc, dịch truyền',
-                    data: $scope.lephidvnhom.group_1000062
-
-                }, {
-                    type: 'spline',
-                    name: 'Vật tư y tế',
-                    data: $scope.lephidvnhom.group_1000063
-
-                }, {
-                    type: 'spline',
-                    name: 'Máu và chế phẩm máu',
-                    data: $scope.lephidvnhom.group_1000065
-
-                }, {
-                    type: 'spline',
-                    name: 'Các loại dịch vụ khác',
-                    data: $scope.lephidvnhom.group_1000067
-
-                }, {
-                    type: 'spline',
-                    name: 'Thăm dò và phục hồi chức năng',
-                    data: $scope.lephidvnhom.group_1000077
-
-                }]
-            });
+        $scope.typeError="";
+        $scope.yearError="";
+        $scope.monthError="";
+        $scope.weekError="";
+        $scope.nameTitleSwrap="";
+        $scope.refreshStatus=function () {
+            $scope.typeError="";
+            $scope.yearError="";
+            $scope.monthError="";
+            $scope.weekError="";
         };
+        $scope.checkBeforeSearch=function () {
+            $scope.refreshStatus();
+          if($scope.type==null || $scope.type=='undefined' || $scope.type.length==0){
+              $scope.typeError="Bạn phải chọn chỉ tiêu thống kê.";
+              return false;
+          }
+          if($scope.year==null ||$scope.year=='undefined' || $scope.year.length==0){
+              $scope.yearError="Bạn phải chọn năm.";
+              return false;
+          }
+          switch ($scope.type){
+              case "0":
+                  $scope.month="";
+                  if($scope.week==null ||$scope.week=='undefined' || $scope.week.length==0){
+                      $scope.weekError="Bạn phải chọn tuần.";
+                      return false;
+                  }
+                  $scope.nameTitleSwrap="tuần "+$scope.week+" của năm "+$scope.year;
+                  break;
+              case "1":
+                  $scope.week="";
+                  if($scope.month==null ||$scope.month=='undefined' || $scope.month.length==0){
+                      $scope.monthError="Bạn phải chọn tháng.";
+                      return false;
+                  }
+                  $scope.nameTitleSwrap="tháng "+$scope.month+"/"+$scope.year;
+                  break;
+              case "2":
+                  $scope.month="";
+                  $scope.week="";
+                  $scope.nameTitleSwrap="năm "+$scope.year;
+                  break;
+              default:break;
+          }
+          return true;
+        };
+
+        $scope.search=function () {
+            if($scope.checkBeforeSearch()){
+                $scope.showLuotKham=false;
+                $scope.showLephi=false;
+                $scope.showTyLeKhoa=false;
+                $scope.showNoitruCacKhoa=false;
+                $scope.reloadAllChart();
+            }
+        };
+        
+        $scope.reloadAllChart=function () {
+            $http.get(preUrl+"/checkup",{params:{year:$scope.year,month:$scope.month,week:$scope.week}})
+                .then(function (response) {
+                    if(response!=null && response!='undefined' && response.status==200){
+                        $scope.checkup=response.data;
+                        $scope.bieudoluotkham();
+                        $scope.showLuotKham=true;
+                    }
+                });
+            $http.get(preUrl+"/lephi-dv",{params:{year:$scope.year,month:$scope.month,week:$scope.week}})
+                .then(function (response) {
+                    if(response!=null && response!='undefined' && response.status==200){
+                        $scope.doanhthulephi=response.data;
+                        $scope.bieudodoanhthulephi();
+                        $scope.showLephi=true;
+                    }
+                });
+            $http.get(preUrl+"/lephi-khoa",{params:{year:$scope.year,month:$scope.month,week:$scope.week}})
+                .then(function (response) {
+                    if(response!=null && response!='undefined' && response.status==200){
+                        $scope.doanhthulephikhoa=response.data;
+                        $scope.loadBieuDoTronDoanhThuLePhiKhoa();
+                        $scope.showTyLeKhoa=true;
+                    }
+                });
+
+            $http.get(preUrl+"/bnnoitru-khoa",{params:{year:$scope.year,month:$scope.month,week:$scope.week}})
+                .then(function (response) {
+                    if(response!=null && response!='undefined' && response.status==200){
+                        $scope.bnnoitrukhoa=response.data;
+                        $scope.loadBieuDoTronBNNoitruKhoa();
+                        $scope.showNoitruCacKhoa=true;
+                    }
+                });
+
+            $scope.nameTitle=$scope.nameTitleSwrap;
+        }
 
 
     }]);

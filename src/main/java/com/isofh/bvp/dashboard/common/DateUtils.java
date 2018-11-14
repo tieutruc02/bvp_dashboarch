@@ -3,11 +3,9 @@ package com.isofh.bvp.dashboard.common;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class DateUtils {
     public static Date genDateWeek(int year, int week, boolean isFrom){
@@ -29,6 +27,16 @@ public class DateUtils {
             cal.set(Calendar.MINUTE,59);
             cal.set(Calendar.HOUR_OF_DAY,23);
             return cal.getTime();
+        }
+    }
+    public static Date genFromAndToCurrentDay(boolean isFrom){
+        if(isFrom){
+            LocalDate currentDate = LocalDate.now();
+            LocalDateTime from = currentDate.atTime(0,0,0);
+            return Date.from(from.atZone(ZoneId.systemDefault()).toInstant());
+        }else{
+            LocalDateTime to=LocalDateTime.now();
+            return Date.from(to.atZone(ZoneId.systemDefault()).toInstant());
         }
     }
     public static Date getFromAndToDate(int year, int month, int week,boolean isFrom){
@@ -76,4 +84,56 @@ public class DateUtils {
         }
         return list;
     }
+    public static Date genFirstDayOfMonthCurrent(){
+        LocalDate date = LocalDate.now();
+        LocalDate firstDayOfMonth=date.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime fromDate=firstDayOfMonth.atTime(0,0,0,0);
+        return Date.from(fromDate.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date genDateFromOfLast12Month(){
+        LocalDate date = LocalDate.now();
+        LocalDate earlier=date.minusYears(1);
+        LocalDate firstDayOfMonth=earlier.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime fromDate=firstDayOfMonth.atTime(0,0,0,0);
+        return Date.from(fromDate.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    public static List<Integer> genListMonthValue(){
+        LocalDate date = LocalDate.now();
+        LocalDate earlier=date.minusYears(1);
+        List<Integer> list=new ArrayList<>();
+        for(int i=0;i<12;i++){
+            list.add(earlier.plusMonths(i+1).getMonthValue());
+        }
+        return list;
+    }
+    public static List<String> genListMonthName(){
+        LocalDate date = LocalDate.now();
+        LocalDate earlier=date.minusYears(1);
+        List<String> list=new ArrayList<>();
+        for(int i=0;i<12;i++){
+            list.add(earlier.plusMonths(i+1).getMonthValue()+"/"+earlier.plusMonths(i+1).getYear());
+        }
+        return list;
+    }
+
+//    public static void main(String[] args) {
+//        LocalDate date = LocalDate.now();
+//        LocalDate earlier=date.minusYears(1);
+//        LocalDate firstDayOfMonth=earlier.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+//        LocalDateTime fromDate=firstDayOfMonth.atTime(0,0,0,0);
+//        System.out.println(fromDate);
+//        System.out.println(fromDate.getMonth().getValue());
+//
+//
+//        LocalDate date1 = LocalDate.now();
+//        List<Integer> list=new ArrayList<>();
+//        HashMap<Integer,String> map=new HashMap<>();
+//        for(int i=0;i<12;i++){
+//            list.add(date1.minusMonths(i).getMonthValue());
+//            map.put(date1.minusMonths(i).getMonthValue(),date1.minusMonths(i).getMonthValue()+"/"+date1.minusMonths(i).getYear());
+//        }
+//        System.out.println(list);
+//        System.out.println(map);
+//    }
 }

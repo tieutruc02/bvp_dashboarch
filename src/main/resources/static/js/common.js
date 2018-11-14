@@ -120,3 +120,13 @@ function getWeekNumber(d) {
     // Return array of year and week number
     return weekNo;
 }
+
+
+function lastDayOfMonth() {
+    var month = 0; // January
+    var d = new Date(2008, month + 1, 0);
+    alert(d); // last day in January
+}
+
+// neu lay ngay dau thang thi chi can newDate.setDate(1);
+    

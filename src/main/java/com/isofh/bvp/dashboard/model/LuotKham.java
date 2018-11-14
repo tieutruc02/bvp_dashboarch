@@ -9,6 +9,7 @@ public class LuotKham {
     private Date regdate;
     private BigDecimal soluong;
 
+
     public LuotKham(){}
     public LuotKham(String his_patienttype_id,Date regdate,BigDecimal soluong){
         this.his_patienttype_id=his_patienttype_id;
