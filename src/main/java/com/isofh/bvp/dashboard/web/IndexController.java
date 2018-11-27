@@ -1,30 +1,29 @@
 package com.isofh.bvp.dashboard.web;
 
-import com.isofh.bvp.dashboard.common.DateUtils;
 import com.isofh.bvp.dashboard.model.*;
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import org.apache.commons.jexl2.UnifiedJEXL;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,15 +59,21 @@ public class IndexController {
 //        }
 //        return new ResponseEntity<BieuDo2GiaTri>(new BieuDo2GiaTri(),HttpStatus.OK);
 //    }
+    @GetMapping("/last-update")
+    public ResponseEntity<Date> lastUpdate(){
+        Date date=repository.getLastUpdated();
+        return new ResponseEntity<Date>(date,HttpStatus.OK);
+    }
+
     @GetMapping("/checkup")
-    public ResponseEntity<BieuDo2GiaTri> luotkham(){
+    public ResponseEntity<BieuDo3GiaTri> luotkham(){
         try{
-            BieuDo2GiaTri item=repository.getLuotkham();
-            return new ResponseEntity<BieuDo2GiaTri>(item,HttpStatus.OK);
+            BieuDo3GiaTri item=repository.getLuotkham();
+            return new ResponseEntity<BieuDo3GiaTri>(item,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResponseEntity<BieuDo2GiaTri>(new BieuDo2GiaTri(),HttpStatus.OK);
+        return new ResponseEntity<BieuDo3GiaTri>(new BieuDo3GiaTri(),HttpStatus.OK);
     }
 
     @GetMapping("/checkup-department")
@@ -166,46 +171,92 @@ public class IndexController {
         return new ResponseEntity<BieuDoLePhiNhomDV>(new BieuDoLePhiNhomDV(),HttpStatus.OK);
     }
 
-
-    @GetMapping("/open")
-    public void downloadGeneralSaleSmsSearch(HttpServletResponse response) {
-//    public ResponseEntity<BieuDoLePhiNhomDV> openfile(){
-
+    @GetMapping("/refresh")
+    public ResponseEntity<String> refreshDate(){
         try{
-
-            Date date=DateUtils.genFirstDayOfMonthCurrent();
-            List<Object[]> LuotKhamTest=indexRepository.LuotKhamTest(date).orElse(new ArrayList<>());
-//            BieuDo2GiaTri item=repository.getLuotkham();
-//            List<DoiTuong12Thang> list= indexRepository.LuotKhamTheoKhoa(date).orElse(new ArrayList<>());
-//            for(DoiTuong12Thang item:list){
-//                item.setName("Thế giới, to thật to;'");
-//            }
-//            Writer writer = Files.newBufferedWriter(Paths.get("myfile.csv"));
-
-//            String[] columns = new String[]{"id", "name", "type","quantity","month","year"};
-//            mapStrategy.setColumnMapping(columns);
-
-//            StatefulBeanToCsv btcsv = new StatefulBeanToCsvBuilder(response.getWriter())
-//                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
-////                    .withMappingStrategy(mapStrategy)
-//                    .withSeparator(',')
-//                    .build();
-//            btcsv.write(LuotKhamTest);
-
-
-            int i=LuotKhamTest.get(0).length;
-
+            repository.loadReportObject();
         }catch (Exception e){
-            e.printStackTrace();
+
         }
+        return new ResponseEntity<String>("",HttpStatus.OK);
 
     }
 
-    public static void countField(Object[] item) {
-        if (item == null) {
-            return;
-        }
-
-        System.out.println("Tong so field:" +item.length);
-    }
+//    @GetMapping("/download")
+//    public void download(HttpServletResponse response,String query) {
+//        boolean error=false;
+//        try{
+//            if(StringUtils.isNotBlank(query)){
+//                query=query.replaceAll(";"," ");
+//            }
+//            List<Object[]> list=indexRepository.SQLquery(query).orElse(new ArrayList<>());
+//            if(list.size()==0) throw new Exception();
+//            Resource resource = new ClassPathResource("myfile.xlsx");
+//            InputStream fileIn = resource.getInputStream();
+//            Workbook wb = WorkbookFactory.create(fileIn);
+//            Sheet sheet = wb.getSheetAt(0);
+//            int colummNum=1;
+//            try{
+//                colummNum = list.get(0).length;
+//            }catch (Exception e){
+//
+//            }
+//            if(colummNum==1){
+//                for(int i=0;i<list.size();i++){
+//                    Object item=list.get(i);
+//                    Row row=sheet.createRow(0+i);
+//                    row.createCell(0);
+//                    if(item!=null){
+//                        row.getCell(0).setCellValue(String.valueOf(item));
+//                    }
+//                }
+//            }else{
+//                for(int i=0;i<list.size();i++){
+//                    Object[] item=list.get(i);
+//                    Row row=sheet.createRow(0+i);
+//                    for(int j=0;j<colummNum;j++){
+//                        row.createCell(j);
+//                    }
+//                    if(item!=null){
+//                        for(int j=0;j<colummNum;j++){
+//                            if(item[j]!=null)
+//                                row.getCell(j).setCellValue(String.valueOf(item[j]));
+//                        }
+//                    }
+//                }
+//            }
+//
+//            response.setContentType("application/vnd.ms-excel");
+//            response.setHeader("Content-Disposition", "attachment; filename=" + "BaoCao.xlsx");
+//            ServletOutputStream out = response.getOutputStream();
+//            wb.write(out);
+//            out.flush();
+//            out.close();
+//
+//        }catch (Exception e){
+//            error=true;
+//        }
+//
+//        if(error){
+//            try{
+////                Writer writer = Files.newBufferedWriter(Paths.get("myfile.csv"));
+//                String errorStr="Cau lenh SQL khong dung nen gay ra loi chuong trinh";
+//                List<ErrorExport> errors=new ArrayList<>();
+//                errors.add(new ErrorExport(errorStr));
+//                StatefulBeanToCsv btcsv = new StatefulBeanToCsvBuilder(response.getWriter())
+//                        .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+////                        .withMappingStrategy(mapStrategy)
+////                        .withSeparator(',')
+//                        .build();
+//                btcsv.write(errors);
+//            }catch (Exception e){
+//
+//            }
+//
+//        }
+//    }
+//    @GetMapping("/export")
+//    public String report(){
+//        return "export";
+//    }
 }

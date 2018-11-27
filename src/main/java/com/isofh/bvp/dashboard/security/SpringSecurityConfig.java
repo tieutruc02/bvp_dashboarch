@@ -61,7 +61,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/open",true)
+                .defaultSuccessUrl("/",true)
                 .permitAll()
                 .and()
                 .logout()

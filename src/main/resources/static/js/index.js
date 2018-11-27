@@ -10,8 +10,20 @@ app.controller('dashCtrl',['$scope','$http'
         $scope.showTyLeKhoa=false;
         $scope.showNoitruCacKhoa=false;
         $scope.listColor=["#3498DB","#9B59B6","#26B99A","#dbcb34","#db3445","#db7734","#db3498","#34db77","#5e0d70","#0f3582","#0f6e82","#0f8235","#82520f","#BDC3C7","#0b3501","#030f00"];
+        $scope.lastUpdate="";
 
-
+        /*THOI GIAN CAP NHAT CUOI*/
+        $http.get(preUrl+"/last-update")
+            .then(function (response) {
+                if(response!=null && response!='undefined' && response.status==200){
+                    $scope.lastUpdate=response.data;
+                }
+            });
+        $scope.refresh=function(){
+            $http.get(preUrl+"/refresh")
+                .then(function (response) {
+                });
+        };
 /*BIEU DO TRON TY LE DOANH THU LE PHI CAC KHOA*/
         $scope.doanhthulephikhoa="";
         $http.get(preUrl+"/lephi-khoa")
@@ -112,9 +124,9 @@ app.controller('dashCtrl',['$scope','$http'
                 title: {
                     text: 'SL BN nội trú các khoa hiện có'
                 },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
+                // subtitle: {
+                //     text: 'Source: isofh.com'
+                // },
                 xAxis: {
                     categories: $scope.bnnoitrukhoa.names,
                     // categories: ['haha','mama','kaka'],
@@ -129,7 +141,7 @@ app.controller('dashCtrl',['$scope','$http'
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.f} BN</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:,0.f} BN</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -199,12 +211,12 @@ app.controller('dashCtrl',['$scope','$http'
                 },
 
                 series: [{
-                    name: 'Ngoại trú',
+                    name: 'Nội trú',
                     data: $scope.doanhthulephi.values1,
                     color:'#f7a35c',
                     stack: 'lephi'
                 }, {
-                    name: 'Nội trú',
+                    name: 'Ngoại trú',
                     data: $scope.doanhthulephi.values2,
                     color:'#26B99A',
                     stack: 'lephi'
@@ -220,6 +232,7 @@ app.controller('dashCtrl',['$scope','$http'
 
         /*BIEU DO LUOT KHAM*/
         $scope.checkup="";
+        $scope.linetong="";
         $http.get(preUrl+"/checkup")
             .then(function (response) {
                 if(response!=null && response!='undefined' && response.status==200){
@@ -228,17 +241,25 @@ app.controller('dashCtrl',['$scope','$http'
                     $scope.showLuotKham=true;
                 }
             });
+        Highcharts.setOptions({
+            lang: {
+                // numericSymbols: null //otherwise by default ['k', 'M', 'G', 'T', 'P', 'E']
+                numericSymbols:  [' ngàn', ' triệu', ' tỉ', ' ngàn tỉ', ' triệu tỉ']
+            }
+        });
+
         $scope.bieudoluotkham=function(){
             Highcharts.chart('luotkham', {
+
                 chart: {
                     type: 'column'
                 },
                 title: {
                     text: 'Lượt khám theo thời gian'
                 },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
+                // subtitle: {
+                //     text: 'Source: isofh.com'
+                // },
                 xAxis: {
                     categories: $scope.checkup.names,
                     crosshair: true
@@ -253,7 +274,7 @@ app.controller('dashCtrl',['$scope','$http'
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.f} lượt</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:,0.f} lượt</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -263,6 +284,7 @@ app.controller('dashCtrl',['$scope','$http'
                         pointPadding: 0.2,
                         borderWidth: 0
                     }
+
                 },
                 series: [{
                     type: 'spline',
@@ -274,6 +296,11 @@ app.controller('dashCtrl',['$scope','$http'
                     type: 'spline',
                     name: 'Dịch vụ',
                     data: $scope.checkup.values2
+
+                }, {
+                    type: 'spline',
+                    name: 'Tổng',
+                    data: $scope.checkup.values3
 
                 }]
             });
@@ -297,9 +324,9 @@ app.controller('dashCtrl',['$scope','$http'
                 title: {
                     text: 'Lượt khám bệnh các khoa'
                 },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
+                // subtitle: {
+                //     text: 'Source: isofh.com'
+                // },
                 xAxis: {
                     categories: $scope.checkupDepartment.names,
                     crosshair: true
@@ -314,7 +341,7 @@ app.controller('dashCtrl',['$scope','$http'
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.f} lượt</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:,0.f} lượt</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -359,9 +386,9 @@ app.controller('dashCtrl',['$scope','$http'
                 title: {
                     text: 'Lệ phí DV theo nhóm DV'
                 },
-                subtitle: {
-                    text: 'Source: p.produce.isofh.vn'
-                },
+                // subtitle: {
+                //     text: 'Source: isofh.com'
+                // },
                 xAxis: {
                     categories: $scope.lephidvnhom.names,
                     crosshair: false

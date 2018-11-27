@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="app">
+<head>
+    <title>Dashboard BVP</title>
+    <div th:replace="fragments/header :: header-common"/>
+    <script th:src="@{/js/export.js}"></script>
+</head>
+<body>
+<section class="vbox">
+    <div th:replace="fragments/header :: header-menu" />
+    <section>
+        <section class="hbox stretch"  ng-app="dash"  ng-controller="reportCtrl">
+            <section id="content">
+                <section class="vbox">
+                    <section class="scrollable padder">
+                        <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
+                            <li><a href="/"><i class="fa fa-home"></i>&nbsp;Home</a></li>
+                        </ul>
+                        <section class="panel panel-default">
+                            <header class="panel-heading font-bold">Điền câu SQL vào ô</header>
+                            <div class="panel-body" >
+                                <textarea class="form-control" ng-model="query" rows="20"  ></textarea>
+                                <a class="btn btn-info pull-right" ng-click="download(baocao)" style="margin-top:20px;">Xuất báo cáo</a>
+                            </div>
+                        </section>
+
+                    </section>
+                </section>
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+            </section>
+        </section>
+    </section>
+</section>
+<div th:replace="fragments/footer :: footer-common" />
+</body>
+</html>

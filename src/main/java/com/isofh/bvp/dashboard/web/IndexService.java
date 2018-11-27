@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -45,11 +44,9 @@ public class IndexService {
         departmentsIP.put(Long.valueOf(1000234),"HSTC");
         departmentsIP.put(Long.valueOf(1000272),"PTLN");
         departmentsIP.put(Long.valueOf(1000261),"UB");
-        departmentsIP.put(Long.valueOf(1000241),"VS");
         departmentsIP.put(Long.valueOf(1000238),"NGOAI_TH");
         departmentsIP.put(Long.valueOf(1000333),"KCC");
         departmentsIP.put(Long.valueOf(1000270),"GMHS");
-        departmentsIP.put(Long.valueOf(1000313),"CMU");
         departmentsIP.put(Long.valueOf(1000233),"LAO");
         departmentsIP.put(Long.valueOf(1000239),"NHI");
         departmentsIP.put(Long.valueOf(1000236),"HOHAP");
@@ -165,11 +162,22 @@ public class IndexService {
 //        return Optional.ofNullable(list);
 //    }
 
-    public Optional<BieuDo2GiaTri> LuotKhamBenh(){
+    public Optional<BieuDo3GiaTri> LuotKhamBenh(){
         List<DoiTuong12Thang> list=LuotKham().orElse(new ArrayList<>());
         BieuDo2GiaTri bieudo=new BieuDo2GiaTri();
         genBieuDo12Thang(list,bieudo);
-        return Optional.ofNullable(bieudo);
+
+        BieuDo3GiaTri bieuDo3GiaTri=new BieuDo3GiaTri();
+        bieuDo3GiaTri.setNames(bieudo.getNames());
+        bieuDo3GiaTri.setValues1(bieudo.getValues1());
+        bieuDo3GiaTri.setValues2(bieudo.getValues2());
+        List<BigDecimal> listvalue3=new ArrayList<>();
+        for(int i=0;i<bieudo.getNames().size();i++){
+            listvalue3.add(bieudo.getValues1().get(i).add(bieudo.getValues2().get(i)));
+        }
+        bieuDo3GiaTri.setValues3(listvalue3);
+
+        return Optional.ofNullable(bieuDo3GiaTri);
     }
 
     private Optional<List<DoiTuong12Thang>> LuotKham(){
@@ -244,7 +252,9 @@ public class IndexService {
         List<Long> listGiaTri=new ArrayList<>();
         HashMap<Long,String> map=new HashMap<>();
         for(DoiTuong12Thang item:list){
-            map.put(item.getId(),item.getName());
+            if(!item.getName().equals("KHTH")){ // ko tinh phong KHTH
+                map.put(item.getId(),item.getName());
+            }
         }
         map.forEach((k,v)->{
             names.add(v);
@@ -588,85 +598,15 @@ public class IndexService {
             if(item.getId()!=null){
                 switch (item.getId().intValue()){
                     case 1000057: SetValueListGroupLevel(item,listValue_1000057,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000057.get(names.get(i));
-//                                listValue_1000057.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000058:  SetValueListGroupLevel(item,listValue_1000058,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000058.get(names.get(i));
-//                                listValue_1000058.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000059:  SetValueListGroupLevel(item,listValue_1000059,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000059.get(names.get(i));
-//                                listValue_1000059.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000060:  SetValueListGroupLevel(item,listValue_1000060,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000060.get(names.get(i));
-//                                listValue_1000060.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000061:  SetValueListGroupLevel(item,listValue_1000061,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000061.get(names.get(i));
-//                                listValue_1000061.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
-                    case 1000062:  SetValueListGroupLevel(item,listValue_1000057,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000062.get(names.get(i));
-//                                listValue_1000062.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
+                    case 1000062:  SetValueListGroupLevel(item,listValue_1000062,names,listthang); break;
                     case 1000063:  SetValueListGroupLevel(item,listValue_1000063,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000063.get(names.get(i));
-//                                listValue_1000063.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000065:  SetValueListGroupLevel(item,listValue_1000065,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000065.get(names.get(i));
-//                                listValue_1000065.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     case 1000077:  SetValueListGroupLevel(item,listValue_1000077,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000077.get(names.get(i));
-//                                listValue_1000077.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                     default:  SetValueListGroupLevel(item,listValue_1000067,names,listthang); break;
-//                        for(int i=0;i<listthang.size();i++){
-//                            if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
-//                                BigDecimal value=listValue_1000067.get(names.get(i));
-//                                listValue_1000067.put(names.get(i),value.add(item.getQuantity()));
-//                                break;
-//                            }
-//                        }
                 }
             }
         }
@@ -751,6 +691,9 @@ public class IndexService {
     }
 
     public void SetValueListGroupLevel(DoiTuong12Thang item,HashMap<String,BigDecimal> listValue,List<String> names,List<Integer> listthang){
+        if(item.getId().intValue()==1000057){
+            System.out.println("Thang "+item.getMonth());
+        }
         for(int i=0;i<listthang.size();i++){
             if(item.getMonth()!=null && item.getMonth().intValue()==listthang.get(i).intValue()){
                 BigDecimal value=listValue.get(names.get(i));

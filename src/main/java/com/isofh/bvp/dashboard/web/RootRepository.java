@@ -14,7 +14,7 @@ import java.util.Date;
 
 @Component
 public class RootRepository {
-    public BieuDo2GiaTri luotkham=new BieuDo2GiaTri();
+    public BieuDo3GiaTri luotkham=new BieuDo3GiaTri();
     public BieuDo2GiaTri luotkhamkhoa=new BieuDo2GiaTri();
     public BieuDo3GiaTri lephidv=new BieuDo3GiaTri();
     public BieuDo lephikhoa=new BieuDo();
@@ -30,16 +30,16 @@ public class RootRepository {
         loadReportObject();
     }
 
-    private void loadReportObject(){
+    public synchronized void loadReportObject(){
         try{
             System.out.println("begin load Object : "+new Date());
-            luotkham=service.LuotKhamBenh().orElse(new BieuDo2GiaTri());
+            luotkham=service.LuotKhamBenh().orElse(new BieuDo3GiaTri());
             luotkhamkhoa=service.LuotKhamBenhKhoa().orElse(new BieuDo2GiaTri());
             bnNoitru=service.BNNoiTruKhoa().orElse(new BieuDo());
-//            lephikhoa=service.TyLeLePhiKhoa().orElse(new BieuDo());
-//            lephidv=service.DoanhThuLePhiDV().orElse(new BieuDo3GiaTri());
+            lephikhoa=service.TyLeLePhiKhoa().orElse(new BieuDo());
+            lephidv=service.DoanhThuLePhiDV().orElse(new BieuDo3GiaTri());
             System.out.println("End 4 cai dau :"+new Date());
-//            lePhiNhomDV=service.LePhiTheoNhomDV().orElse(new BieuDoLePhiNhomDV());
+            lePhiNhomDV=service.LePhiTheoNhomDV().orElse(new BieuDoLePhiNhomDV());
             System.out.println("end get data:"+new Date());
             lastUpdated=new Date();
         }catch (Exception e){
@@ -50,10 +50,23 @@ public class RootRepository {
     @Scheduled(cron = "0 0/10 0 * * *")
     @Transactional(rollbackFor = Exception.class)
     public void refreshWhenNewDay(){
+        System.out.println("Bat dau scheduled 0h10" +new Date());
         loadReportObject();
     }
 
-    public  BieuDo2GiaTri getLuotkham(){
+    @Scheduled(cron = "0 0/10 12 * * *")
+    @Transactional(rollbackFor = Exception.class)
+    public void refreshWhenNewDay1(){
+        loadReportObject();
+    }
+    @Scheduled(cron = "0 0/55 6 * * *")
+    @Transactional(rollbackFor = Exception.class)
+    public void refreshWhenNewDay3(){
+        loadReportObject();
+    }
+
+
+    public  BieuDo3GiaTri getLuotkham(){
         return luotkham;
     }
     public  BieuDo2GiaTri getLuotkhamKhoa(){
