@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Component
@@ -22,8 +23,8 @@ public class RootRepository {
     public BieuDoLePhiNhomDV lePhiNhomDV=new BieuDoLePhiNhomDV();
     public Date lastUpdated=new Date();
 
-    @Autowired
-    IndexService service;
+//    @Autowired
+//    IndexService service;
 
     @PostConstruct
     public void init(){
@@ -33,33 +34,33 @@ public class RootRepository {
     public synchronized void loadReportObject(){
         try{
             System.out.println("begin load Object : "+new Date());
-            luotkham=service.LuotKhamBenh().orElse(new BieuDo3GiaTri());
-            luotkhamkhoa=service.LuotKhamBenhKhoa().orElse(new BieuDo2GiaTri());
-            bnNoitru=service.BNNoiTruKhoa().orElse(new BieuDo());
-            lephikhoa=service.TyLeLePhiKhoa().orElse(new BieuDo());
-            lephidv=service.DoanhThuLePhiDV().orElse(new BieuDo3GiaTri());
+//            luotkham=service.LuotKhamBenh().orElse(new BieuDo3GiaTri());
+//            luotkhamkhoa=service.LuotKhamBenhKhoa().orElse(new BieuDo2GiaTri());
+//            bnNoitru=service.BNNoiTruKhoa().orElse(new BieuDo());
+//            lephikhoa=service.TyLeLePhiKhoa().orElse(new BieuDo());
+//            lephidv=service.DoanhThuLePhiDV().orElse(new BieuDo3GiaTri());
             System.out.println("End 4 cai dau :"+new Date());
-            lePhiNhomDV=service.LePhiTheoNhomDV().orElse(new BieuDoLePhiNhomDV());
+//            lePhiNhomDV=service.LePhiTheoNhomDV().orElse(new BieuDoLePhiNhomDV());
             System.out.println("end get data:"+new Date());
             lastUpdated=new Date();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
-    @Scheduled(cron = "0 0/10 0 * * *")
+// link cron : https://www.freeformatter.com/cron-expression-generator-quartz.html
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional(rollbackFor = Exception.class)
     public void refreshWhenNewDay(){
-        System.out.println("Bat dau scheduled 0h10" +new Date());
+        System.out.println("Bat dau scheduled 0h" +new Date());
         loadReportObject();
     }
 
-    @Scheduled(cron = "0 0/10 12 * * *")
+    @Scheduled(cron = "0 0 12 * * *")
     @Transactional(rollbackFor = Exception.class)
     public void refreshWhenNewDay1(){
         loadReportObject();
     }
-    @Scheduled(cron = "0 0/55 6 * * *")
+    @Scheduled(cron = "0 50 6 * * *")
     @Transactional(rollbackFor = Exception.class)
     public void refreshWhenNewDay3(){
         loadReportObject();

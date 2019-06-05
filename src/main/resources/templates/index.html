@@ -1,62 +1,209 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="app">
 <head>
-    <title>Dashboard BVP</title>
+    <title>Isofh</title>
     <div th:replace="fragments/header :: header-common"/>
     <script th:src="@{/js/index.js}"></script>
 </head>
 <body>
 <section class="vbox">
-    <div th:replace="fragments/header :: header-menu" />
+    <div th:replace="fragments/header :: header-menu"/>
     <section>
-        <section class="hbox stretch"  ng-app="dash"  ng-controller="dashCtrl">
+        <section class="hbox stretch" ng-app="dash" ng-controller="dashCtrl">
             <section id="content">
                 <section class="vbox">
                     <section class="scrollable padder">
                         <ul class="breadcrumb no-border no-radius b-b b-light pull-in">
                             <li><a href="/"><i class="fa fa-home"></i>&nbsp;Home</a></li>
                         </ul>
-                        <h3 class="text-info text-center">Dashboard tổng quan số liệu viện (cập nhật lúc {{lastUpdate |date:'dd/MM/yyyy HH:mm:ss'}} )</h3>
-                        <a class="btn btn-info" data-toggle="modal" data-target="#refresh">Refresh DL</a>
+                        <!--<h3 class="text-info text-center">Dashboard tổng quan số liệu viện (cập nhật {{lastUpdate-->
+                        <!--|date:'dd/MM/yyyy HH:mm:ss'}} )</h3>-->
                         <section id="main" class="panel panel-default">
 
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="col-lg-8">
                                         <section class="panel panel-default">
-                                            <header class="panel-heading font-bold">Biểu đồ số lượt khám bệnh 12 tháng gần đây</header>
+                                            <header class="panel-heading font-bold">Biểu đồ số lượt khám bệnh 12 tháng
+                                                gần đây
+                                            </header>
                                             <div class="panel-body" style="height:430px;">
-                                                <div id="luotkham" style="min-width: 310px; height: 400px; margin: 0 auto" ng-show="showLuotKham"></div>
-                                                <div ng-show="!showLuotKham" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                                <div id="luotkham"
+                                                     style="min-width: 310px; height: 400px; margin: 0 auto"
+                                                     ng-show="showLuotKham"></div>
+                                                <div ng-show="!showLuotKham"
+                                                     style="margin:100px auto;text-align:center;"><i
+                                                        class="fa fa-2x fa-spinner fa-spin"></i></div>
                                             </div>
                                         </section>
                                         <section class="panel panel-default">
-                                            <header class="panel-heading font-bold">Biểu đồ số lượt khám bệnh các khoa tháng hiện tại</header>
+                                            <header class="panel-heading font-bold">Biểu đồ số lượt khám bệnh các khoa
+                                                tháng hiện tại
+                                            </header>
                                             <div class="panel-body" style="height:430px;">
-                                                <div id="luotkhamcackhoa" style="min-width: 310px; height: 400px; margin: 0 auto" ng-show="showLuotKhamKhoa"></div>
-                                                <div ng-show="!showLuotKhamKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                                <div id="luotkhamcackhoa"
+                                                     style="min-width: 310px; height: 400px; margin: 0 auto"
+                                                     ng-show="showLuotKhamKhoa"></div>
+                                                <div ng-show="!showLuotKhamKhoa"
+                                                     style="margin:100px auto;text-align:center;"><i
+                                                        class="fa fa-2x fa-spinner fa-spin"></i></div>
                                             </div>
                                         </section>
-
                                     </div>
                                     <div class="col-lg-4">
                                         <section class="panel panel-default">
-                                            <header class="panel-heading font-bold">Tỷ lệ doanh thu lệ phí dịch vụ các khoa tháng hiện tại</header>
+                                            <header class="panel-heading font-bold">Tỷ lệ doanh thu lệ phí dịch vụ các
+                                                khoa tháng hiện tại
+                                            </header>
                                             <div class=" " style="height:880px">
                                                 <div class="bieudotron" style="text-align:center">
-                                                    <div ng-show="!showTyLeKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
-                                                    <canvas class="canvasDoughnutDoanhThuLePhiKhoa" height="300" width="300" style="margin: 15px 10px 10px 0;" ng-show="showTyLeKhoa"></canvas>
-                                                    <table class="table table-striped m-b-none" style="text-align:left" ng-show="showTyLeKhoa">
+                                                    <!--<div ng-show="!showTyLeKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>-->
+                                                    <canvas class="canvasDoughnutDoanhThuLePhiKhoa" height="300"
+                                                            width="300" style="margin: 15px 10px 10px 0;"></canvas>
+                                                    <table class="table table-striped m-b-none" style="text-align:left"
+                                                           ng-show="showTyLeKhoa">
                                                         <tbody>
-                                                        <tr  ng-repeat="item in listDeparmentName track by $index">
+                                                        <tr>
                                                             <td>
-                                                             <span class="fa-stack fa pull-right m-r-sm">
-                                                                 <i class="fa fa-square fa-stack-2x" style="color:{{listColor[$index]}};"></i> <i class="fa fa-stack-1x text-white"></i>
-                                                             </span>
+                                                                     <span class="fa-stack fa pull-right m-r-sm">
+                                                                         <i class="fa fa-square fa-stack-2x"
+                                                                            style="color:#3498DB;"></i> <i
+                                                                             class="fa fa-stack-1x text-white"></i>
+                                                                     </span>
                                                             </td>
-                                                            <td>{{listDeparmentName[$index]}}</td>
+                                                            <td>Khoa nội tổng hợp</td>
                                                             <td style="text-align: right;">
-                                                                {{doanhthulephikhoa.values[$index] | currency:'':0}}
+                                                                5,434,343,224
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#9B59B6;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa Cấp cứu</td>
+                                                            <td style="text-align: right;">
+                                                                8,347,359,355
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#26B99A;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa Gây mê hồi sức</td>
+                                                            <td style="text-align: right;">
+                                                                9,753,473,345
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#dbcb34;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa khám bệnh</td>
+                                                            <td style="text-align: right;">
+                                                                7,934,734,342
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#db3445;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa chuẩn đoán hình ảnh</td>
+                                                            <td style="text-align: right;">
+                                                                6,375,634,545
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#db7734;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa phẫu thuật chỉnh hình</td>
+                                                            <td style="text-align: right;">
+                                                                8,346,352,634
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#db3498;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa thần kinh</td>
+                                                            <td style="text-align: right;">
+                                                                2,548,647,675
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#34db77;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa nhi</td>
+                                                            <td style="text-align: right;">
+                                                                2,548,647,675
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#5e0d70;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa Nội soi chẩn đoán và can thiệp</td>
+                                                            <td style="text-align: right;">
+                                                                2,548,647,675
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="fa-stack fa pull-right m-r-sm">
+                                                                     <i class="fa fa-square fa-stack-2x"
+                                                                        style="color:#0f3582;"></i> <i
+                                                                        class="fa fa-stack-1x text-white"></i>
+                                                                 </span>
+                                                            </td>
+                                                            <td>Khoa Chức năng</td>
+                                                            <td style="text-align: right;">
+                                                                2,548,647,675
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                    <span class="fa-stack fa pull-right m-r-sm">
+                                                                         <i class="fa fa-square fa-stack-2x"
+                                                                            style="color:#BDC3C7;"></i> <i
+                                                                            class="fa fa-stack-1x text-white"></i>
+                                                                     </span>
+                                                            </td>
+                                                            <td>Khoa khác</td>
+                                                            <td style="text-align: right;">
+                                                                15,343,429,789
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -73,26 +220,41 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Số lượng người bệnh điều trị nội trú các khoa hiện có</header>
+                                        <header class="panel-heading font-bold">Số lượng người bệnh điều trị nội trú các
+                                            khoa hiện có
+                                        </header>
                                         <div class="bieudoBNNoitruCacKhoa">
-                                            <div id="dsnoitru" style="min-width: 310px; height: 380px; margin: 0 auto" ng-show="showNoitruCacKhoa"></div>
-                                            <div ng-show="!showNoitruCacKhoa" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                            <div id="dsnoitru" style="min-width: 310px; height: 380px; margin: 0 auto"
+                                                 ng-show="showNoitruCacKhoa"></div>
+                                            <div ng-show="!showNoitruCacKhoa"
+                                                 style="margin:100px auto;text-align:center;"><i
+                                                    class="fa fa-2x fa-spinner fa-spin"></i></div>
                                         </div>
 
                                     </section>
                                     <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ 12 tháng gần đây</header>
+                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ 12
+                                            tháng gần đây
+                                        </header>
                                         <div class="panel-body" style="height:400px;">
-                                            <div id="bieudochong" ng-show="showLephi" style="min-width: 310px; height: 360px; margin: 0 auto"></div>
-                                            <div ng-show="!showLephi" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                            <div id="bieudochong" ng-show="showLephi"
+                                                 style="min-width: 310px; height: 360px; margin: 0 auto"></div>
+                                            <div ng-show="!showLephi" style="margin:100px auto;text-align:center;"><i
+                                                    class="fa fa-2x fa-spinner fa-spin"></i></div>
                                         </div>
                                     </section>
 
                                     <section class="panel panel-default">
-                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ theo nhóm 12 tháng gần đây</header>
+                                        <header class="panel-heading font-bold">Biểu đồ doanh thu lệ phí dịch vụ theo
+                                            nhóm 12 tháng gần đây
+                                        </header>
                                         <div class="panel-body" style="height:430px;">
-                                            <div id="lephinhomdv" style="min-width: 310px; height: 400px; margin: 0 auto" ng-show="show_lephinhomdv"></div>
-                                            <div ng-show="!show_lephinhomdv" style="margin:100px auto;text-align:center;"><i class="fa fa-2x fa-spinner fa-spin"></i></div>
+                                            <div id="lephinhomdv"
+                                                 style="min-width: 310px; height: 400px; margin: 0 auto"
+                                                 ng-show="show_lephinhomdv"></div>
+                                            <div ng-show="!show_lephinhomdv"
+                                                 style="margin:100px auto;text-align:center;"><i
+                                                    class="fa fa-2x fa-spinner fa-spin"></i></div>
                                         </div>
                                     </section>
 
@@ -101,28 +263,28 @@
                             </div>
 
                         </section>
-                        <div class="modal fade"  id="refresh"  role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-                            <div class="modal-dialog" style="max-width: 500px;">
-                                <div class="modal-content"style="max-width: 500px;">
-                                    <div class="modal-header" style="padding: 7px;">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h5 class="modal-title" id="myModalLable">Refresh DL</h5>
-                                    </div>
-                                    <!--<form id="filter" method="GET"  action="/refresh" theme="simple" enctype="multipart/form-data" cssClass="form-horizontal" cssStyle="" validate="false">-->
-                                        <div class="modal-body"  style="padding: 10px;">
-                                            <div class="form-group">
-                                                <label class="control-label">Bạn xác nhận refresh DL</label>
-                                            </div>
+                        <!--<div class="modal fade"  id="refresh"  role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">-->
+                        <!--<div class="modal-dialog" style="max-width: 500px;">-->
+                        <!--<div class="modal-content"style="max-width: 500px;">-->
+                        <!--<div class="modal-header" style="padding: 7px;">-->
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
+                        <!--<h5 class="modal-title" id="myModalLable">Refresh DL</h5>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash;<form id="filter" method="GET"  action="/refresh" theme="simple" enctype="multipart/form-data" cssClass="form-horizontal" cssStyle="" validate="false">&ndash;&gt;-->
+                        <!--<div class="modal-body"  style="padding: 10px;">-->
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">Bạn xác nhận refresh DL</label>-->
+                        <!--</div>-->
 
-                                        </div>
-                                        <div class="modal-footer" style="padding: 10px;" >
-                                            <a  class="btn btn-default" data-dismiss="modal">Hủy bỏ</a>
-                                            <a  class="btn btn-info" data-dismiss="modal" ng-click="refresh()">Đồng ý</a>
-                                        </div>
-                                    <!--</form>-->
-                                </div>
-                            </div>
-                        </div>
+                        <!--</div>-->
+                        <!--<div class="modal-footer" style="padding: 10px;" >-->
+                        <!--<a  class="btn btn-default" data-dismiss="modal">Hủy bỏ</a>-->
+                        <!--<a  class="btn btn-info" data-dismiss="modal" ng-click="refresh()">Đồng ý</a>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash;</form>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
                     </section>
                 </section>
                 <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
@@ -131,14 +293,14 @@
         </section>
     </section>
 </section>
-<div th:replace="fragments/footer :: footer-common" />
+<div th:replace="fragments/footer :: footer-common"/>
 <script th:src="@{/note/js/charts/sparkline/jquery.sparkline.min.js}" cache="false"></script>
 <script th:src="@{/note/js/charts/easypiechart/jquery.easy-pie-chart.js}" cache="false"></script>
 <script th:src="@{/js/highcharts/highcharts.js}" cache="false"></script>
 <!--<script src="https://code.highcharts.com/modules/data.js"></script>-->
 <script th:src="@{/js/highcharts/highcharts-more.js}" cache="false"></script>
 <script th:src="@{/js/highcharts/exporting.js}" cache="false"></script>
-<script th:src="@{/note/js/charts/flot/jquery.flot.min.js}" ></script>
+<script th:src="@{/note/js/charts/flot/jquery.flot.min.js}"></script>
 <script th:src="@{/note/js/charts/flot/jquery.flot.tooltip.min.js}"></script>
 <script th:src="@{/note/js/charts/flot/jquery.flot.resize.js}"></script>
 <script th:src="@{/note/js/charts/flot/jquery.flot.grow.js}"></script>

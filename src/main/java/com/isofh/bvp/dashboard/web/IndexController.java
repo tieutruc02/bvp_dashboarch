@@ -31,12 +31,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-    @Autowired
-    IndexService service;
-    @Autowired
-    RootRepository repository;
-    @Autowired
-    IndexRepository indexRepository;
+//    @Autowired
+//    IndexService service;
+//    @Autowired
+//    RootRepository repository;
+//    @Autowired
+//    IndexRepository indexRepository;
 
     @GetMapping("/home")
     public String home() {
@@ -59,128 +59,107 @@ public class IndexController {
 //        }
 //        return new ResponseEntity<BieuDo2GiaTri>(new BieuDo2GiaTri(),HttpStatus.OK);
 //    }
-    @GetMapping("/last-update")
-    public ResponseEntity<Date> lastUpdate(){
-        Date date=repository.getLastUpdated();
-        return new ResponseEntity<Date>(date,HttpStatus.OK);
-    }
+//    @GetMapping("/last-update")
+//    public ResponseEntity<Date> lastUpdate(){
+//        Date date=repository.getLastUpdated();
+//        return new ResponseEntity<Date>(date,HttpStatus.OK);
+//    }
 
     @GetMapping("/checkup")
     public ResponseEntity<BieuDo3GiaTri> luotkham(){
-        try{
-            BieuDo3GiaTri item=repository.getLuotkham();
-            return new ResponseEntity<BieuDo3GiaTri>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            BieuDo3GiaTri item=repository.getLuotkham();
+//            return new ResponseEntity<BieuDo3GiaTri>(item,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<BieuDo3GiaTri>(new BieuDo3GiaTri(),HttpStatus.OK);
     }
 
     @GetMapping("/checkup-department")
     public ResponseEntity<BieuDo2GiaTri> luotkhamKhoa(){
-        try{
-            BieuDo2GiaTri item=repository.getLuotkhamKhoa();
-            return new ResponseEntity<BieuDo2GiaTri>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            BieuDo2GiaTri item=repository.getLuotkhamKhoa();
+//            return new ResponseEntity<BieuDo2GiaTri>(item,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<BieuDo2GiaTri>(new BieuDo2GiaTri(),HttpStatus.OK);
     }
 
     @GetMapping("/lephi-dv")
     public ResponseEntity<BieuDo3GiaTri> lephi(){
-        try{
-            BieuDo3GiaTri item=repository.getLephidv();
-            return new ResponseEntity<BieuDo3GiaTri>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            BieuDo3GiaTri item=repository.getLephidv();
+//            return new ResponseEntity<BieuDo3GiaTri>(item,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<BieuDo3GiaTri>(new BieuDo3GiaTri(),HttpStatus.OK);
     }
 
     @GetMapping("/lephi-khoa")
     public ResponseEntity<BieuDo> lephiCacKhoa(){
-        try{
-            BieuDo item=repository.getLephikhoa();
-            return new ResponseEntity<BieuDo>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            BieuDo item=repository.getLephikhoa();
+//            return new ResponseEntity<BieuDo>(item,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<BieuDo>(new BieuDo(),HttpStatus.OK);
     }
 
     @GetMapping("/list-department-name")
     public ResponseEntity<List<String>> listDepartmentName(){
-        try{
-            List<String> names=new ArrayList<>();
-            IndexService.departments.forEach((k,v)->{
-                names.add(v);
-            });
-            return new ResponseEntity<List<String>>(names,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            List<String> names=new ArrayList<>();
+//            IndexService.departments.forEach((k,v)->{
+//                names.add(v);
+//            });
+//            return new ResponseEntity<List<String>>(names,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<List<String>>(new ArrayList<>(),HttpStatus.OK);
     }
 
     @GetMapping("/list-department-ip")
     public ResponseEntity<List<String>> listDepartmentInpatient(){
-        try{
-            List<String> names=new ArrayList<>();
-            IndexService.departmentsIP.forEach((k,v)->{
-                names.add(v);
-            });
-            return new ResponseEntity<List<String>>(names,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            List<String> names=new ArrayList<>();
+//            IndexService.departmentsIP.forEach((k,v)->{
+//                names.add(v);
+//            });
+//            return new ResponseEntity<List<String>>(names,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<List<String>>(new ArrayList<>(),HttpStatus.OK);
     }
 
-//    @GetMapping("/bnnoitru-khoa")
-//    public ResponseEntity<BieuDo> CountPatientInDepartmentIP(int year, @RequestParam(value = "month", required = false, defaultValue = "0")int month
-//            , @RequestParam(value = "week", required = false, defaultValue = "0") int week){
+
+    @GetMapping("/bnnoitru-khoa")
+    public ResponseEntity<BieuDo> CountPatientInDepartmentIP(){
 //        try{
-//            BieuDo item=service.BNNoiTruKhoa(year,month,week).orElse(new BieuDo());
+//            BieuDo item=repository.getBnNoitru();
 //            return new ResponseEntity<BieuDo>(item,HttpStatus.OK);
 //        }catch (Exception e){
 //            e.printStackTrace();
 //        }
-//        return new ResponseEntity<BieuDo>(new BieuDo(),HttpStatus.OK);
-//    }
-
-    @GetMapping("/bnnoitru-khoa")
-    public ResponseEntity<BieuDo> CountPatientInDepartmentIP(){
-        try{
-            BieuDo item=repository.getBnNoitru();
-            return new ResponseEntity<BieuDo>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return new ResponseEntity<BieuDo>(new BieuDo(),HttpStatus.OK);
     }
 
     @GetMapping("/lephidvnhom")
     public ResponseEntity<BieuDoLePhiNhomDV> LePhiDVNhomDV(){
-        try{
-            BieuDoLePhiNhomDV item=repository.getBieuDoLePhiNhomDV();
-            return new ResponseEntity<BieuDoLePhiNhomDV>(item,HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            BieuDoLePhiNhomDV item=repository.getBieuDoLePhiNhomDV();
+//            return new ResponseEntity<BieuDoLePhiNhomDV>(item,HttpStatus.OK);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return new ResponseEntity<BieuDoLePhiNhomDV>(new BieuDoLePhiNhomDV(),HttpStatus.OK);
     }
 
-    @GetMapping("/refresh")
-    public ResponseEntity<String> refreshDate(){
-        try{
-            repository.loadReportObject();
-        }catch (Exception e){
-
-        }
-        return new ResponseEntity<String>("",HttpStatus.OK);
-
-    }
 
 //    @GetMapping("/download")
 //    public void download(HttpServletResponse response,String query) {
